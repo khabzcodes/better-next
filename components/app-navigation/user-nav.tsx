@@ -18,6 +18,8 @@ import { Icons } from '@/components/icons';
 import { signOut } from '@/lib/auth-client';
 import React from 'react';
 import { redirect } from 'next/navigation';
+import { logger } from 'better-auth';
+import { toast } from 'sonner';
 
 type UserNavProps = {
   user: {
@@ -38,8 +40,11 @@ export const UserNav = ({ user }: UserNavProps) => {
       redirect('/login');
     } catch (error) {
       if (error instanceof Error) {
-        console.error('Logout error:', error.message);
+        logger.error(`Error logging out: ${error.message}`);
+        return toast.error(error.message);
       }
+      logger.error('An unknown error occurred while logging out.');
+      return toast.error('An unknown error occurred while logging out.');
     }
   };
 
